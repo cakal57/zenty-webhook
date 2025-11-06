@@ -100,53 +100,7 @@ module.exports = async (req, res) => {
         
         console.log('✅ Parsed Signal:', signal);
         
-        // 🔥 Firebase'e kaydet!
-        try {
-            // Re-check Firebase initialization
-            if (admin.apps.length === 0) {
-                console.log('⚠️ Firebase not initialized, attempting to initialize...');
-                initFirebase();
-            }
-            
-            console.log('📡 Attempting to connect to Firebase...');
-            const db = admin.database();
-            console.log('✅ Got database reference');
-            
-            const signalRef = db.ref('webhook-signals').push();
-            console.log('✅ Created signal reference:', signalRef.key);
-            
-            await signalRef.set(signal);
-            console.log('🔥 Signal saved to Firebase successfully:', signalRef.key);
-            
-            // Eski sinyalleri temizle (son 50'yi tut)
-            const snapshot = await db.ref('webhook-signals').once('value');
-            const signalCount = snapshot.numChildren();
-            console.log(`📊 Total signals in database: ${signalCount}`);
-            
-            if (signalCount > 50) {
-                const oldSignalsQuery = db.ref('webhook-signals')
-                    .orderByChild('timestamp')
-                    .limitToFirst(signalCount - 50);
-                
-                const oldSignals = await oldSignalsQuery.once('value');
-                const deletePromises = [];
-                
-                oldSignals.forEach((child) => {
-                    deletePromises.push(child.ref.remove());
-                });
-                
-                await Promise.all(deletePromises);
-                console.log(`🗑️ Cleaned up ${signalCount - 50} old signals`);
-            }
-            
-        } catch (firebaseError) {
-            console.error('❌ Firebase Error occurred!');
-            console.error('❌ Error name:', firebaseError.name);
-            console.error('❌ Error message:', firebaseError.message);
-            console.error('❌ Error stack:', firebaseError.stack);
-            // Firebase hatası olsa bile webhook başarılı sayılsın
-        }
-        
+       
         // Başarılı yanıt
         return res.status(200).json({ 
             success: true, 
@@ -164,3 +118,4 @@ module.exports = async (req, res) => {
         });
     }
 };
+
