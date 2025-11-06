@@ -1,7 +1,7 @@
 {
   "name": "zenty-webhook-server",
-  "version": "1.0.0",
-  "description": "Zenty AI Webhook Server - TradingView Signals",
+  "version": "2.0.0",
+  "description": "Zenty AI Webhook Server - TradingView Signals + Firebase",
   "main": "api/webhook.js",
   "scripts": {
     "dev": "vercel dev",
@@ -12,10 +12,14 @@
     "tradingview",
     "crypto",
     "signals",
-    "zenty"
+    "zenty",
+    "firebase"
   ],
   "author": "Zenty AI",
   "license": "MIT",
-  "dependencies": {}
+  "dependencies": {
+    "firebase-admin": "^12.0.0"
+  }
 }
+
 
